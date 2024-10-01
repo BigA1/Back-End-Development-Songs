@@ -16,14 +16,12 @@ songs_list: list = json.load(open(json_url))
 
 # client = MongoClient(
 #     f"mongodb://{app.config['MONGO_USERNAME']}:{app.config['MONGO_PASSWORD']}@localhost")
-mongodb_service = (
-    "tallcluster.mrpzip0.mongodb.net/?retryWrites=true&w=majority&appName=TallCluster"
-)
-mongodb_username = "tallAdmin"
+mongodb_service = os.environ.get("MONGODB_SERVICE")
+mongodb_username = os.environ.get("MONGODB_USERNAME")
 mongodb_password = os.environ.get("MONGODB_PASSWORD")
 mongodb_port = os.environ.get("MONGODB_PORT")
 
-# print(f'The value of MONGODB_SERVICE is: {mongodb_service}')
+print(f"The value of MONGODB_SERVICE is: {mongodb_service}")
 
 if mongodb_service == None:
     app.logger.error("Missing MongoDB server in the MONGODB_SERVICE variable")
@@ -31,12 +29,12 @@ if mongodb_service == None:
     sys.exit(1)
 
 if mongodb_username and mongodb_password:
-    url = f"mongodb+srv://{mongodb_username}:{mongodb_password}@{mongodb_service}"
+    url = f"mongodb://{mongodb_username}:{mongodb_password}@{mongodb_service}"
 else:
     url = f"mongodb://{mongodb_service}"
 
 
-# print(f"connecting to url: {url}")
+print(f"connecting to url: {url}")
 
 try:
     client = MongoClient(url)
